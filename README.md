@@ -25,3 +25,19 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+# Start app
+### Prerequisites
+What do you need? Vagrant (v2), Oracle VirtualBox 6.0.
+App will use Alpine Linux.
+## Instructions
+### 1
+In root directory of project run command "vagrant up".
+### 2
+Vagrant will ask "Which interface should the network bridge to?"
+If you don't want to serve app on local network comment line 13 of vagrantfile:
+config.vm.network "public_network"
+### 3
+App will be build from GitHub code (https://github.com/mlekolak/spa.git) and serve on localhost:8080 (or look for assigned IP address in logs, it will be served IP:80).
+### 4
+Done. Have fun :)
