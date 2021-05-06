@@ -31,13 +31,14 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 What do you need? Vagrant (v2), Oracle VirtualBox 6.0.
 App will use Alpine Linux.
 ## Instructions
-### 1
-In root directory of project run command "vagrant up".
-### 2
+### 1 Configure
+Set variables token (`#38`) if you want to push ready image to DockerHub. If variable is empty, app will be served without storing in repository.
+If you want to serve app on local network uncomment `#13` of vagrantfile:
+'config.vm.network "public_network"'
 Vagrant will ask "Which interface should the network bridge to?"
-If you don't want to serve app on local network comment line 13 of vagrantfile:
-config.vm.network "public_network"
-### 3
+### 2 Build&Run
+In root directory of project run command "vagrant up".
+### 3 Working app
 App will be build from GitHub code (https://github.com/mlekolak/spa.git) and serve on localhost:8080 (or look for assigned IP address in logs, it will be served IP:80).
-### 4
+### 4 Done
 Done. Have fun :)

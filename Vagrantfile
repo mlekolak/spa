@@ -33,22 +33,24 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     echo "Setting up..."
+    #############################################
+    #############################################
+    export token=3e9c9f11-2824-4588-9b33-b1658fb216ee
+    export user=bonusso3
+    #############################################
+    #############################################
     apk add docker
     apk add git
     service docker start
     echo "net.ipv4.ip_forward = " && cat /proc/sys/net/ipv4/ip_forward
     sysctl -w net.ipv4.ip_forward=1
-  SHELL
 
-  config.vm.provision "shell", inline: <<-SHELL
     echo "Cloning GIT"
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     git clone https://github.com/mlekolak/spa.git app
-  SHELL
 
-  config.vm.provision "shell", inline: <<-SHELL
     echo "Building app"
     cd /home/vagrant/app
     cp /home/vagrant/nginx.conf .
@@ -56,17 +58,27 @@ Vagrant.configure("2") do |config|
     grep 'Path' angular.json
     # sed -i -E 's/(dist\/.*)/dist\/app",/g' angular.json
     docker build -t app .
+    ID="$(docker images | grep 'app' | head -n 1 | awk '{print $3}')"
+    timestamp=$(date +%d%m%Y_%H%M%S)
+
     docker run --name app -d -p 80:80 app
+    docker tag $ID $user/app:$timestamp
 
-    sleep 15
-
+    sleep 5
+    echo $token
+    echo $user
+    echo $timestamp
     status_code=$(curl --write-out %{http_code} --silent --output /dev/null localhost:80)
-
     if [[ "$status_code" -eq 200 ]] ; then
       echo "App is up! Test status is $status_code"
+      if [ -n "$token" ] ; then
+        echo "Pushing $user/app:$timestamp"
+        docker login -u $user -p $token
+        docker push $user/app:$timestamp
+      fi
     else
       echo "Something went wrong"
-      exit 0
+      exit 1
     fi
   SHELL
 end
