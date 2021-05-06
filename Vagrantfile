@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
     echo "Setting up..."
     #############################################
     #############################################
-    export token=3e9c9f11-2824-4588-9b33-b1658fb216ee
+    export token=""
     export user=bonusso3
     #############################################
     #############################################
@@ -65,9 +65,7 @@ Vagrant.configure("2") do |config|
     docker tag $ID $user/app:$timestamp
 
     sleep 5
-    echo $token
-    echo $user
-    echo $timestamp
+
     status_code=$(curl --write-out %{http_code} --silent --output /dev/null localhost:80)
     if [[ "$status_code" -eq 200 ]] ; then
       echo "App is up! Test status is $status_code"
